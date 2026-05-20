@@ -4,6 +4,7 @@
 import logging
 
 from fastmcp import FastMCP
+from fastmcp_credentials import CredentialMiddleware, HeaderCredentialBackend
 
 from polymarket_mcp.cli import parse_args
 from polymarket_mcp.config import configure_logging
@@ -12,7 +13,11 @@ from polymarket_mcp.tools import register_tools
 configure_logging()
 logger = logging.getLogger("polymarket-mcp-server")
 
-mcp = FastMCP("CL Polymarket MCP Server")
+backend = HeaderCredentialBackend()
+mcp = FastMCP(
+    "CL Polymarket MCP Server",
+    middleware=[CredentialMiddleware(backend, "static")],
+)
 register_tools(mcp)
 
 # Expose ASGI app for hosting platform's (e.g. Vercel) Python runtime.

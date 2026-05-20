@@ -264,7 +264,6 @@ def register_tools(mcp: FastMCP) -> None:
         description="Create a new order on Polymarket. Requires API key authentication. Order will be placed on the CLOB.",
     )
     async def polymarket_create_order(
-        api_key: str = Field(..., description="Polymarket API key for authentication"),
         market_id: str = Field(..., description="Market ID to place order on"),
         side: str = Field(..., description="Order side: 'BUY' or 'SELL'"),
         price: float = Field(..., description="Order price in USD"),
@@ -273,7 +272,7 @@ def register_tools(mcp: FastMCP) -> None:
     ) -> str:
         """Create an order (authenticated)."""
         try:
-            client = PolymarketClient(api_key=api_key)
+            client = PolymarketClient()
             order_data = {
                 "market": market_id,
                 "side": side.upper(),
@@ -303,12 +302,11 @@ def register_tools(mcp: FastMCP) -> None:
         description="Cancel an existing order. Requires API key authentication.",
     )
     async def polymarket_cancel_order(
-        api_key: str = Field(..., description="Polymarket API key for authentication"),
         order_id: str = Field(..., description="ID of the order to cancel"),
     ) -> str:
         """Cancel an order (authenticated)."""
         try:
-            client = PolymarketClient(api_key=api_key)
+            client = PolymarketClient()
             await client.cancel_order(order_id)
 
             output = {
@@ -327,14 +325,13 @@ def register_tools(mcp: FastMCP) -> None:
         description="Get user's orders. Requires API key authentication. Can filter by market.",
     )
     async def polymarket_get_orders(
-        api_key: str = Field(..., description="Polymarket API key for authentication"),
         market_id: str = Field(
             default=None, description="Optional market ID to filter orders"
         ),
     ) -> str:
         """Get user's orders (authenticated)."""
         try:
-            client = PolymarketClient(api_key=api_key)
+            client = PolymarketClient()
             result = await client.get_orders(market_id=market_id)
 
             output = {
@@ -367,11 +364,4 @@ def register_tools(mcp: FastMCP) -> None:
     )
     def polymarket_health_check() -> str:
         """Health check endpoint."""
-        return json.dumps(
-            {
-                "status": "ok",
-                "server": "CL Polymarket MCP Server",
-                "type": "third-party integration",
-                "auth_required": "for trading operations only",
-            }
-        )
+        return json.dumps({"status": "ok", "server": "CL Polymarket MCP Server"})

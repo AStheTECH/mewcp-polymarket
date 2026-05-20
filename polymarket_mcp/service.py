@@ -3,6 +3,7 @@ import logging
 from typing import Any, Dict, List, Optional
 
 import httpx
+from fastmcp_credentials import get_credentials
 
 from .config import CLOB_API_BASE, DATA_API_BASE, DEFAULT_HEADERS, GAMMA_API_BASE
 
@@ -12,16 +13,12 @@ logger = logging.getLogger("polymarket-mcp-server")
 class PolymarketClient:
     """Client for Polymarket APIs (Gamma, Data, CLOB)."""
 
-    def __init__(self, api_key: Optional[str] = None):
-        """Initialize Polymarket API client.
-
-        Args:
-            api_key: Optional API key for authenticated CLOB endpoints
-        """
-        self.api_key = api_key
+    def __init__(self):
+        cred = get_credentials()
+        self.api_key = cred.fields.get("api_key")
         self.headers = DEFAULT_HEADERS.copy()
-        if api_key:
-            self.headers["Authorization"] = f"Bearer {api_key}"
+        if self.api_key:
+            self.headers["Authorization"] = f"Bearer {self.api_key}"
 
     async def _request(
         self,
