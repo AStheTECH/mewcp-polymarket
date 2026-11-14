@@ -103,7 +103,7 @@ _D_SYNC = (
     "If true, the call blocks until the order is filled, rejected, canceled or expired, up to `max_block_time` "
     "seconds, and the response includes its executions. Omit to return immediately."
 )
-_D_MAX_BLOCK = "Maximum seconds to block when `synchronous_execution` is true, as an integer string (e.g. '10')."
+_D_MAX_BLOCK = "Maximum seconds to block when `synchronous_execution` is true, as an integer string (e.g. '10'). Omit to leave unset; it has no effect unless `synchronous_execution` is true."
 _D_SLIPPAGE = (
     "Slippage tolerance as an object with optional keys `currentPrice` (reference market price, an object with "
     f"{_AMOUNT_KEYS}), `bips` (int, basis points, 1 bip = 0.01%) and `ticks` (int, price ticks; takes priority over "
