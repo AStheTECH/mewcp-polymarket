@@ -31,7 +31,7 @@ def register_search_tools(mcp: FastMCP) -> None:
         query: str | None = Field(default=None, description="The query to search for (free text). Omit to search without a text query."),
         limit: int | None = Field(default=None, description="The maximum number of results to return. Omit to use the API default."),
         series_ids: list[int] | None = Field(default=None, description="Filter by series IDs (integers, sent as repeated `seriesIds` values). Omit to not filter by series."),
-        market_type: list[str] | None = Field(default=None, description="Filter by market types (sent as repeated `marketType` values). Omit to not filter by market type."),
+        market_type: list[str] | None = Field(default=None, description="Filter by market types, as a list of free-form strings (the provider lists no accepted values; sent as repeated `marketType` values). Omit to not filter by market type."),
         start_time_min: str | None = Field(default=None, description="Minimum start time filter: ISO 8601 UTC datetime (e.g. '2026-11-01T00:00:00Z'); date-only or Unix values have no effect and raise no error. Omit for no lower bound."),
         start_time_max: str | None = Field(default=None, description="Maximum start time filter: ISO 8601 UTC datetime (e.g. '2026-11-01T00:00:00Z'); date-only or Unix values have no effect and raise no error. Omit for no upper bound."),
         closed_time_min: str | None = Field(default=None, description="Minimum closed time filter: ISO 8601 UTC datetime (e.g. '2026-11-01T00:00:00Z'); date-only or Unix values have no effect and raise no error. Omit for no lower bound."),
