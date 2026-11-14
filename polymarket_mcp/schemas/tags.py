@@ -139,10 +139,10 @@ class TagEvent(BaseModel):
     primaryTag: Tag | None = None
     secondaryTag: Tag | None = None
     primaryTagSlug: str | None = Field(
-        default=None, description="Admin-only primary tag slug override; omitted on public reads."
+        default=None, description="Admin-only replacement primary tag slug; omitted on public reads."
     )
     secondaryTagSlug: str | None = Field(
-        default=None, description="Admin-only secondary tag slug override; omitted on public reads."
+        default=None, description="Admin-only replacement secondary tag slug; omitted on public reads."
     )
     livestreamUrl: str | None = None
     featureAvailability: dict[str, Any] | None = None

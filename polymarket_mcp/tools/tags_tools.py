@@ -32,7 +32,7 @@ def register_tags_tools(mcp: FastMCP) -> None:
             "Lists tags in ranked order, optionally filtered by slug, tag IDs, parent tag or a "
             "case-insensitive label substring. Returns each tag's ID, label, slug, image, "
             "tradable flag, league and sport details, parent ID and subtags. "
-            "If both parentSlug and parentId are given, parentSlug wins and parentId is ignored."
+            "If both parentSlug and parentId are given, parentSlug takes precedence over parentId."
         ),
         annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=True),
     )
@@ -43,8 +43,8 @@ def register_tags_tools(mcp: FastMCP) -> None:
         orderDirection: str | None = Field(default=None, description="Sort direction for orderBy (`asc` or `desc`). Omit for the server default."),
         slug: list[str] | None = Field(default=None, description="Tag slugs to filter by. Omit to not filter by slug."),
         ids: list[int] | None = Field(default=None, description="Tag IDs to filter by. Omit to not filter by ID."),
-        parentId: int | None = Field(default=None, description="Return only children of this parent tag ID. Ignored if parentSlug is provided."),
-        parentSlug: str | None = Field(default=None, description="Return only children of the parent tag with this slug. Takes priority over parentId."),
+        parentId: int | None = Field(default=None, description="Return only children of this parent tag ID. parentSlug takes precedence if both are given. Omit to not filter by parent ID."),
+        parentSlug: str | None = Field(default=None, description="Return only children of the parent tag with this slug. Takes precedence over parentId. Omit to not filter by parent slug."),
         query: str | None = Field(default=None, description="Case-insensitive substring to match against tag labels. Omit to not filter by label."),
     ) -> ListTagsResult:
         tlog = ToolLogger(logger, "list_tags")

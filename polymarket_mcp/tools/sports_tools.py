@@ -103,8 +103,8 @@ def register_sports_tools(mcp: FastMCP) -> None:
         limit: int | None = Field(default=None, description="Maximum number of events to return. Omit for the API default."),
         offset: int | None = Field(default=None, description="Number of events to skip for pagination. Omit to start from the first event."),
         excludeEventId: list[int] | None = Field(default=None, description="Event IDs to leave out of the results. Omit to exclude none."),
-        event_type: Literal["sport", "futures"] = Field(default="sport", description="Event type: 'sport' for games or 'futures' for futures markets."),
-        section: Literal["general", "trending"] = Field(default="general", description="Section to list: 'general' or 'trending'."),
+        event_type: Literal["sport", "futures"] = Field(default="sport", description="Event type: 'sport' for games or 'futures' for futures markets. Omit for 'sport'."),
+        section: Literal["general", "trending"] = Field(default="general", description="Section to list: 'general' or 'trending'. Omit for 'general'."),
     ) -> ListSportEventsResult:
         tlog = ToolLogger(logger, "list_sport_events")
         if not slug.strip():
@@ -140,8 +140,8 @@ def register_sports_tools(mcp: FastMCP) -> None:
         annotations=_READ_ONLY,
     )
     def list_leagues(
-        limit: int = Field(default=50, description="Maximum number of leagues to return (1-50)."),
-        offset: int = Field(default=0, description="Number of leagues to skip for pagination."),
+        limit: int = Field(default=50, description="Maximum number of leagues to return (1-50). Omit for 50."),
+        offset: int = Field(default=0, description="Number of leagues to skip for pagination. Omit to start from the first league."),
     ) -> ListLeaguesResult:
         tlog = ToolLogger(logger, "list_leagues")
         if limit < 1 or limit > 50:
@@ -200,8 +200,8 @@ def register_sports_tools(mcp: FastMCP) -> None:
         limit: int | None = Field(default=None, description="Maximum number of events to return. Omit for the API default."),
         offset: int | None = Field(default=None, description="Number of events to skip for pagination. Omit to start from the first event."),
         excludeEventId: list[int] | None = Field(default=None, description="Event IDs to leave out of the results. Omit to exclude none."),
-        event_type: Literal["sport", "futures"] = Field(default="sport", description="Event type: 'sport' for games or 'futures' for futures markets."),
-        section: Literal["general", "trending"] = Field(default="general", description="Section to list: 'general' or 'trending'."),
+        event_type: Literal["sport", "futures"] = Field(default="sport", description="Event type: 'sport' for games or 'futures' for futures markets. Omit for 'sport'."),
+        section: Literal["general", "trending"] = Field(default="general", description="Section to list: 'general' or 'trending'. Omit for 'general'."),
     ) -> ListLeagueEventsResult:
         tlog = ToolLogger(logger, "list_league_events")
         if not slug.strip():
