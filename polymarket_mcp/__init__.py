@@ -1,1 +1,0 @@
-"""Polymarket MCP Server Package."""
