@@ -72,10 +72,10 @@ class Event(BaseModel):
     primaryTag: dict[str, Any] | None = None
     secondaryTag: dict[str, Any] | None = None
     primaryTagSlug: str | None = Field(
-        default=None, description="Raw primary tag slug override; admin-only, omitted on public reads."
+        default=None, description="Raw replacement primary tag slug; admin-only, omitted on public reads."
     )
     secondaryTagSlug: str | None = Field(
-        default=None, description="Raw secondary tag slug override; admin-only, omitted on public reads."
+        default=None, description="Raw replacement secondary tag slug; admin-only, omitted on public reads."
     )
     livestreamUrl: str | None = None
     streamProvider: str | None = Field(
@@ -84,7 +84,7 @@ class Event(BaseModel):
     )
     streamRequiresAuth: bool | None = Field(
         default=None,
-        description="When true, the event stream only resolves for authenticated requests. Always false when streamProvider is empty.",
+        description="When true, the event stream only resolves for authenticated requests. False when streamProvider is empty.",
     )
     featureAvailability: dict[str, Any] | None = None
     combos: dict[str, Any] | None = None
