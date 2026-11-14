@@ -35,7 +35,7 @@ class AssetPriceSeries(BaseModel):
 class GetAssetPriceHistoryData(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    series: list[AssetPriceSeries] = Field(default=[], description="One series per distinct requested asset. Match by the asset field, never by position: the order is not guaranteed.")
+    series: list[AssetPriceSeries] = Field(default=[], description="One series per distinct requested asset, identified by its asset field; the order is not guaranteed.")
 
 
 class GetAssetPriceHistoryResult(ToolResult):

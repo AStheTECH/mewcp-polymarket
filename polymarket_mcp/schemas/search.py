@@ -109,8 +109,8 @@ class Event(BaseModel):
     marketGroups: list[dict] | None = Field(default=None, description="Flat list of market groups forming a hierarchy via parent ID.")
     primaryTag: dict | None = None
     secondaryTag: dict | None = None
-    primaryTagSlug: str | None = Field(default=None, description="Raw upstream primary tag slug override (admin-only; omitted on public reads).")
-    secondaryTagSlug: str | None = Field(default=None, description="Raw upstream secondary tag slug override (admin-only; omitted on public reads).")
+    primaryTagSlug: str | None = Field(default=None, description="Raw upstream replacement primary tag slug (admin-only; omitted on public reads).")
+    secondaryTagSlug: str | None = Field(default=None, description="Raw upstream replacement secondary tag slug (admin-only; omitted on public reads).")
     livestreamUrl: str | None = None
     featureAvailability: dict | None = None
     comboEnabled: bool | None = Field(default=None, description="Whether this event has at least one combo-enabled market.")

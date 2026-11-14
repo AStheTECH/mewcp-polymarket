@@ -28,8 +28,8 @@ def register_asset_prices_tools(mcp: FastMCP) -> None:
             "one series per distinct asset with its currency, effective window and candles (decimal-string "
             "prices); buckets with no ticks are gap-filled (close carried forward, tickCount 0). The window is "
             "clamped, not rejected: `from` is raised so a series holds at most 3600 candles (an hour at 1S, "
-            "60 hours at 1M, 150 days at 1H), and the effective bounds are echoed on each series. Match series "
-            "to assets by their `asset` field, never by position. An unknown symbol, or an asset whose markets "
+            "60 hours at 1M, 150 days at 1H), and the effective bounds are echoed on each series. Series order "
+            "is not guaranteed; each series carries its `asset` field. An unknown symbol, or an asset whose markets "
             "are not available yet, fails the whole request with 404."
         ),
         annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=True),
@@ -46,7 +46,7 @@ def register_asset_prices_tools(mcp: FastMCP) -> None:
             "ASSET_PRICE_BUCKET_1H",
             "ASSET_PRICE_BUCKET_1D",
         ] = Field(description="Candle width."),
-        assets: list[str] | None = Field(default=None, description="Assets in canonical <class>:<symbol> form, e.g. crypto:btc, commodity:gold or commodity:silver. At most 10; duplicates are deduped server-side."),
+        assets: list[str] | None = Field(default=None, description="Assets in canonical <class>:<symbol> form, e.g. crypto:btc, commodity:gold or commodity:silver. At most 10; duplicates are deduped server-side. Optional."),
         to: int | None = Field(default=None, description="Unix-seconds end of the window. 0 or a future value means now. The in-progress bucket is included. A past value is aligned up to 10 s for sub-minute buckets, or to one bucket otherwise; the effective end is echoed in the series' `to`. Omit to leave unset."),
     ) -> GetAssetPriceHistoryResult:
         tlog = ToolLogger(logger, "get_asset_price_history")
