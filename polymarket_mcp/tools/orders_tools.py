@@ -80,7 +80,10 @@ _D_PDI = (
     "If true, the order must rest on the book before matching (maker only) and is rejected if it would match "
     "immediately. Omit for no restriction."
 )
-_D_GTT = "Expiration time for `TIME_IN_FORCE_GOOD_TILL_DATE` orders. Omit for other time-in-force values."
+_D_GTT = (
+    "Expiry timestamp for `TIME_IN_FORCE_GOOD_TILL_DATE` orders, as an RFC 3339 UTC string "
+    "(e.g. 2026-11-15T00:00:00Z); format not stated by the provider. Omit for other time-in-force values."
+)
 _D_INTENT = (
     "Order intent: `ORDER_INTENT_BUY_LONG` = buy YES, `ORDER_INTENT_SELL_LONG` = sell YES, "
     "`ORDER_INTENT_BUY_SHORT` = buy NO, `ORDER_INTENT_SELL_SHORT` = sell NO. "
@@ -109,7 +112,8 @@ _D_SLIPPAGE = (
 _ORDER_FIELDS_DOC = (
     "`marketSlug` (str), `type` (ORDER_TYPE_LIMIT|ORDER_TYPE_MARKET), `price` ({value, currency}; needed for limit "
     "orders), `quantity` (float, contracts), `tif` (TIME_IN_FORCE_*), `participateDontInitiate` (bool), "
-    "`goodTillTime` (str), `intent` (ORDER_INTENT_*), `outcomeSide` (OUTCOME_SIDE_YES|OUTCOME_SIDE_NO), "
+    "`goodTillTime` (optional, RFC 3339 UTC expiry for TIME_IN_FORCE_GOOD_TILL_DATE only, e.g. 2026-11-15T00:00:00Z; "
+    "format not stated by the provider), `intent` (ORDER_INTENT_*), `outcomeSide` (OUTCOME_SIDE_YES|OUTCOME_SIDE_NO), "
     "`action` (ORDER_ACTION_BUY|ORDER_ACTION_SELL), `cashOrderQty` ({value, currency}), "
     "`manualOrderIndicator` (MANUAL_ORDER_INDICATOR_*), `synchronousExecution` (bool), `maxBlockTime` "
     "(integer string), `slippageTolerance` ({currentPrice, bips, ticks}). Each entry needs `marketSlug` and either "
@@ -363,7 +367,8 @@ def register_orders_tools(mcp: FastMCP) -> None:
             default=None, description="If true, the order must rest on the book before matching (maker only). Omit to keep the current value.",
         ),
         good_till_time: str | None = Field(
-            default=None, description="New expiration time for `TIME_IN_FORCE_GOOD_TILL_DATE` orders. Omit to keep the current value.",
+            default=None, description="New expiry timestamp for `TIME_IN_FORCE_GOOD_TILL_DATE` orders, as an RFC 3339 UTC string "
+                        "(e.g. 2026-11-15T00:00:00Z); format not stated by the provider. Omit to keep the current value.",
         ),
     ) -> ModifyOrderResult:
         tlog = ToolLogger(logger, "modify_order")
@@ -416,7 +421,7 @@ def register_orders_tools(mcp: FastMCP) -> None:
             "NEVER call this tool autonomously or as part of an automated flow. "
             "You MUST stop, tell the user exactly which order (market, side, price, quantity) will be canceled and "
             "that it is permanent, and wait for their explicit written confirmation before proceeding. "
-            "Returns the canceled order ID (the API returns an empty body on success). Pure cancels are never "
+            "Returns the canceled order ID (the API returns an empty body on success). Pure cancels are not "
             "rejected by the exchange's 5-second latency stopgap."
         ),
         annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True, openWorldHint=True),
@@ -578,7 +583,7 @@ def register_orders_tools(mcp: FastMCP) -> None:
             "NEVER call this tool autonomously or as part of an automated flow. "
             "You MUST stop, tell the user exactly which orders will be canceled and that it is permanent, and wait "
             "for their explicit written confirmation before proceeding. "
-            "Returns `canceledOrderIds`, which only echoes the request — the exchange may silently ignore unknown "
+            "Returns `canceledOrderIds`, which only echoes the request — the exchange may silently skip unknown "
             "order IDs, so verify with list_open_orders. If any entry fails request-shape validation, the whole "
             "batch is rejected before reaching the exchange."
         ),
@@ -619,7 +624,7 @@ def register_orders_tools(mcp: FastMCP) -> None:
             "NEVER call this tool autonomously or as part of an automated flow. "
             "You MUST stop, summarise to the user exactly which orders change and their new values, and wait for "
             "their explicit written confirmation before proceeding. "
-            "Returns `modifiedOrderIds`, which only echoes the request — the exchange may silently ignore unknown "
+            "Returns `modifiedOrderIds`, which only echoes the request — the exchange may silently skip unknown "
             "order IDs, so verify with get_order. If any entry fails request-shape validation, the whole batch is "
             "rejected before reaching the exchange."
         ),
@@ -630,7 +635,9 @@ def register_orders_tools(mcp: FastMCP) -> None:
             description="Orders to modify (1–20). Each entry is an object with `orderId` (exchange-assigned order "
                         "ID), `marketSlug` (market slug the order belongs to) and any of `price` ({value: decimal "
                         "string, currency: e.g. 'USD'}), `quantity` (float, contracts), `tif` (TIME_IN_FORCE_*), "
-                        "`participateDontInitiate` (bool, maker only) and `goodTillTime` (str, for GTD orders).",
+                        "`participateDontInitiate` (bool, maker only) and `goodTillTime` (RFC 3339 UTC expiry for "
+                        "TIME_IN_FORCE_GOOD_TILL_DATE only, e.g. 2026-11-15T00:00:00Z; format not stated by the "
+                        "provider).",
         ),
     ) -> ModifyMultipleOrdersResult:
         tlog = ToolLogger(logger, "modify_multiple_orders")
